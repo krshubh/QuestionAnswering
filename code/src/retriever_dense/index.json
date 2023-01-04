@@ -1,0 +1,60 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "similarity": {
+        "default": {
+          "type": "BM25",
+          "b": 0.75,
+          "k1": 1.2
+        }
+      }
+    },
+    "analysis": {
+      "filter": {
+        "english_stop": {
+          "type": "stop",
+          "stopwords": "_english_"
+        },
+        "ngram_filter": {
+          "type": "edge_ngram",
+          "min_gram": 3,
+          "max_gram": 21
+        }
+      },
+      "analyzer": {
+        "keyword_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "char_filter": ["html_strip"],
+          "filter": [
+            "lowercase",
+            "trim",
+            "asciifolding",
+            "english_stop"
+          ]
+        },
+        "phrase_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "char_filter": ["html_strip"],
+          "filter": ["trim", "lowercase", "asciifolding"]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "dynamic": "true",
+    "_source": {
+      "enabled": "true"
+    },
+    "properties": {
+      "context": {
+        "type": "text",
+        "analyzer": "keyword_analyzer",
+        "similarity": "default"
+      }
+    }
+  }
+}
